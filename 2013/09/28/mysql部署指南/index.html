@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>MySQL部署指南 | Toss</title>
+  <meta name="author" content="menuz">
+  
+  <meta name="description" content="Toss as much as possible">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="MySQL部署指南"/>
+  <meta property="og:site_name" content="Toss"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Toss" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Toss</a></h1>
+  <h2><a href="/">Toss as much as possible</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">首页</a></li>
+    
+      <li><a href="/archives">归档</a></li>
+    
+      <li><a href="/about">关于</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-09-28T01:19:45.000Z"><a href="/2013/09/28/mysql部署指南/">9月 28 2013</a></time>
+      
+      
+  
+    <h1 class="title">MySQL部署指南</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Mac Mysql -&gt; Windows Mysql</p>
+<p>以管理员身份登录mysql</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="comment">mysql</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">root</span> <span class="literal">-</span><span class="comment">p
+</pre></td></tr></table></figure>
+
+<p>选择mysql数据库</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="comment">mysql</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">root</span> <span class="literal">-</span><span class="comment">p
+</pre></td></tr></table></figure>
+
+<p>创建用户并设定密码</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="operator"><span class="keyword">create</span> <span class="keyword">user</span> <span class="string">'xxx'</span>@<span class="string">'localhost'</span> identified <span class="keyword">by</span> <span class="string">'yyy'</span>
+</pre></td></tr></table></figure>
+
+<p>使操作生效</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="title">flush</span> privileges
+</pre></td></tr></table></figure>
+
+<p>为用户创建数据库</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="operator"><span class="keyword">create</span> database sms <span class="keyword">default</span> <span class="keyword">character</span> <span class="keyword">set</span> utf8 <span class="keyword">collate</span> utf8_general_ci;</span>
+</pre></td></tr></table></figure>
+
+<p>为用户赋予操作数据库testdb的所有权限</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="operator"><span class="keyword">grant</span> <span class="keyword">all</span> <span class="keyword">privileges</span> <span class="keyword">on</span> sms.* <span class="keyword">to</span> xxx@localhost identified  <span class="keyword">by</span> <span class="string">'yyy'</span>
+</pre></td></tr></table></figure>
+
+<p>允许任何地址远程连接</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="operator"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> <span class="keyword">PRIVILEGES</span> <span class="keyword">ON</span> *.* <span class="keyword">TO</span> <span class="string">'xxx'</span>@<span class="string">'%'</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">'yyy'</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> <span class="keyword">OPTION</span>;</span>
+</pre></td></tr></table></figure>
+
+<p>使操作生效</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="title">flush</span> privileges
+</pre></td></tr></table></figure>
+
+<p>用新用户登录</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="comment">mysql</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">test</span> <span class="literal">-</span><span class="comment">p
+</pre></td></tr></table></figure>
+
+<p>默认字符集导出数据库</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="comment">mysqldump</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">xxq</span> <span class="literal">-</span><span class="comment">p</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">default</span>-<span class="comment">character</span>-<span class="comment">set=utf8</span> <span class="comment">sms</span> &gt; <span class="comment">sms</span>.<span class="comment">sql</span>
+<span class="comment">mysqldump</span> <span class="literal">-</span><span class="comment">t</span> <span class="comment">dbname</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">root</span> <span class="literal">-</span><span class="comment">p</span> &gt; <span class="comment">dataonly</span>.<span class="comment">sql
+</pre></td></tr></table></figure>
+
+<p>转换字符集导出数据库</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="comment">mysqldump</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">xxq</span> <span class="literal">-</span><span class="comment">p</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">default</span>-<span class="comment">character</span>-<span class="comment">set=utf8</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">set</span>-<span class="comment">charset=latin1</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">skip</span>-<span class="comment">opt</span> <span class="comment">sms</span>&gt;<span class="comment">sms</span>.<span class="comment">sql
+</pre></td></tr></table></figure>
+
+<p>导入数据库</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="comment">mysql</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">xxq</span> <span class="literal">-</span><span class="comment">p</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">default</span>-<span class="comment">character</span>-<span class="comment">set=utf8</span>  <span class="comment">sms</span> &lt; <span class="comment">sms</span>.<span class="comment">sql
+</pre></td></tr></table></figure>
+
+<p>mysql重启 </p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="variable">$mysql_dir</span>/bin/mysqladmin -u root -p <span class="keyword">shutdown</span>
+<span class="variable">$mysql_dir</span>/bin/safe_mysqld &
+</pre></td></tr></table></figure>
+
+<p>如何查看mysql占用端口，验证mysql是否启动</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="title">netstat</span> -aon | findstr <span class="string">"3306"</span>
+<span class="title">telnet</span> mysql <span class="number">3306</span>
+</pre></td></tr></table></figure>
+
+<p>mysql的字符集和校对规则有4个级别的默认设置：服务器级、数据库级、表级和字段级。</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="operator"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">'character_set_%'</span>;</span>
+<span class="operator"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> tb_name;</span>
+<span class="operator"><span class="keyword">show</span> <span class="keyword">full</span> columns <span class="keyword">from</span> tb_name;</span>
+</pre></td></tr></table></figure>
+
+<p>如何change服务器级字符集、数据库级、表级和字段级</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre>修改my.ini  
+default-character-<span class="operator"><span class="keyword">set</span> = utf8
+character_set_server =  utf8
+
+<span class="keyword">alter</span> database dbname <span class="keyword">character</span> <span class="keyword">set</span> utf8 <span class="keyword">collate</span> utf8_general_ci;</span>
+<span class="operator"><span class="keyword">alter</span> <span class="keyword">table</span> tb_name convert <span class="keyword">to</span> <span class="keyword">character</span> <span class="keyword">set</span> charset_name;</span>
+<span class="operator"><span class="keyword">alter</span> <span class="keyword">table</span> tb_name modify latin1_text_col text <span class="keyword">character</span> <span class="keyword">set</span> utf8;</span>
+<span class="operator"><span class="keyword">alter</span> <span class="keyword">table</span> tb_name change old_col_name new_column <span class="keyword">varchar</span>(<span class="number">10</span>) <span class="keyword">character</span> <span class="keyword">set</span> utf8 <span class="keyword">collate</span> utf8_general_ci;</span>
+</pre></td></tr></table></figure>
+
+<blockquote><p>低调做人，高调做事</p>
+</blockquote>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/MySQL/">MySQL</a>
+  </div>
+
+
+<!-- Baidu Button BEGIN -->
+<div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare">
+<span class="bds_more">分享到：</span>
+<a class="bds_tsina">新浪微博</a>
+<a class="bds_qzone">QQ空间</a>
+<a class="bds_renren">人人网</a>
+<a class="bds_douban">豆瓣网</a>
+<a class="bds_diandian">点点网</a>
+</div>
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;mini=1&amp;uid=6827310" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
+</script>
+<!-- Baidu Button END -->
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+<!-- Duoshuo Comment BEGIN -->
+    <div class="ds-thread"></div>
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"menuz"};
+        (function() {
+                    var ds = document.createElement('script');
+                            ds.type = 'text/javascript';ds.async = true;
+                                    ds.src = 'http://static.duoshuo.com/embed.js';
+                                            ds.charset = 'UTF-8';
+                                                    (document.getElementsByTagName('head')[0] 
+                                                            || document.getElementsByTagName('body')[0]).appendChild(ds);
+                                                                })();
+                                                                    </script>
+                                                                    <!-- Duoshuo Comment END -->
+
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yoursite.com">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/MySQL/">MySQL</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  <div class="widget tag">
+<h3 class="title">友情链接</h3>
+<ul class="entry">
+<li><a href="http://menuz.iteye.com/" title="Menuz's Blog">Menuz</a></li>
+</ul>
+</div>
+
+
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2013 menuz
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'disqus';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

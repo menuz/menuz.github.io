@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[Toss]]></title>
+  <subtitle><![CDATA[Toss as much as possible]]></subtitle>
+  <link href="http://yoursite.com/atom.xml" rel="self"/>
+  <link href="http://yoursite.com"/>
+  <updated>2013-09-28T08:13:05.293Z</updated>
+  <id>http://yoursite.com/</id>
+  <author>
+    <name><![CDATA[menuz]]></name>
+    <email><![CDATA[dmnrei@gmail.com]]></email>
+  </author>
+  <generator uri="http://zespia.tw/hexo">Hexo</generator>
+  <entry>
+    <title type="html"><![CDATA[MySQL部署指南]]></title>
+    <link href="http://yoursite.com/2013/09/28/mysql部署指南/"/>
+    <id>http://yoursite.com/2013/09/28/mysql部署指南/</id>
+    <published>2013-09-28T01:19:45.000Z</published>
+    <updated>2013-09-28T04:23:18.000Z</updated>
+    <content type="html"><![CDATA[<p>Mac Mysql -&gt; Windows Mysql</p>
+<p>以管理员身份登录mysql</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="comment">mysql</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">root</span> <span class="literal">-</span><span class="comment">p
+</pre></td></tr></table></figure>
+
+<p>选择mysql数据库</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="comment">mysql</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">root</span> <span class="literal">-</span><span class="comment">p
+</pre></td></tr></table></figure>
+
+<p>创建用户并设定密码</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="operator"><span class="keyword">create</span> <span class="keyword">user</span> <span class="string">'xxx'</span>@<span class="string">'localhost'</span> identified <span class="keyword">by</span> <span class="string">'yyy'</span>
+</pre></td></tr></table></figure>
+
+<p>使操作生效</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="title">flush</span> privileges
+</pre></td></tr></table></figure>
+
+<p>为用户创建数据库</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="operator"><span class="keyword">create</span> database sms <span class="keyword">default</span> <span class="keyword">character</span> <span class="keyword">set</span> utf8 <span class="keyword">collate</span> utf8_general_ci;</span>
+</pre></td></tr></table></figure>
+
+<p>为用户赋予操作数据库testdb的所有权限</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="operator"><span class="keyword">grant</span> <span class="keyword">all</span> <span class="keyword">privileges</span> <span class="keyword">on</span> sms.* <span class="keyword">to</span> xxx@localhost identified  <span class="keyword">by</span> <span class="string">'yyy'</span>
+</pre></td></tr></table></figure>
+
+<p>允许任何地址远程连接</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="operator"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> <span class="keyword">PRIVILEGES</span> <span class="keyword">ON</span> *.* <span class="keyword">TO</span> <span class="string">'xxx'</span>@<span class="string">'%'</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">'yyy'</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> <span class="keyword">OPTION</span>;</span>
+</pre></td></tr></table></figure>
+
+<p>使操作生效</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="title">flush</span> privileges
+</pre></td></tr></table></figure>
+
+<p>用新用户登录</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="comment">mysql</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">test</span> <span class="literal">-</span><span class="comment">p
+</pre></td></tr></table></figure>
+
+<p>默认字符集导出数据库</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="comment">mysqldump</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">xxq</span> <span class="literal">-</span><span class="comment">p</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">default</span>-<span class="comment">character</span>-<span class="comment">set=utf8</span> <span class="comment">sms</span> &gt; <span class="comment">sms</span>.<span class="comment">sql</span>
+<span class="comment">mysqldump</span> <span class="literal">-</span><span class="comment">t</span> <span class="comment">dbname</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">root</span> <span class="literal">-</span><span class="comment">p</span> &gt; <span class="comment">dataonly</span>.<span class="comment">sql
+</pre></td></tr></table></figure>
+
+<p>转换字符集导出数据库</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="comment">mysqldump</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">xxq</span> <span class="literal">-</span><span class="comment">p</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">default</span>-<span class="comment">character</span>-<span class="comment">set=utf8</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">set</span>-<span class="comment">charset=latin1</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">skip</span>-<span class="comment">opt</span> <span class="comment">sms</span>&gt;<span class="comment">sms</span>.<span class="comment">sql
+</pre></td></tr></table></figure>
+
+<p>导入数据库</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="comment">mysql</span> <span class="literal">-</span><span class="comment">u</span> <span class="comment">xxq</span> <span class="literal">-</span><span class="comment">p</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">default</span>-<span class="comment">character</span>-<span class="comment">set=utf8</span>  <span class="comment">sms</span> &lt; <span class="comment">sms</span>.<span class="comment">sql
+</pre></td></tr></table></figure>
+
+<p>mysql重启 </p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="variable">$mysql_dir</span>/bin/mysqladmin -u root -p <span class="keyword">shutdown</span>
+<span class="variable">$mysql_dir</span>/bin/safe_mysqld &
+</pre></td></tr></table></figure>
+
+<p>如何查看mysql占用端口，验证mysql是否启动</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="title">netstat</span> -aon | findstr <span class="string">"3306"</span>
+<span class="title">telnet</span> mysql <span class="number">3306</span>
+</pre></td></tr></table></figure>
+
+<p>mysql的字符集和校对规则有4个级别的默认设置：服务器级、数据库级、表级和字段级。</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="operator"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">'character_set_%'</span>;</span>
+<span class="operator"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> tb_name;</span>
+<span class="operator"><span class="keyword">show</span> <span class="keyword">full</span> columns <span class="keyword">from</span> tb_name;</span>
+</pre></td></tr></table></figure>
+
+<p>如何change服务器级字符集、数据库级、表级和字段级</p>
+<figure class="highlight lang-[sql]"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre>修改my.ini  
+default-character-<span class="operator"><span class="keyword">set</span> = utf8
+character_set_server =  utf8
+
+<span class="keyword">alter</span> database dbname <span class="keyword">character</span> <span class="keyword">set</span> utf8 <span class="keyword">collate</span> utf8_general_ci;</span>
+<span class="operator"><span class="keyword">alter</span> <span class="keyword">table</span> tb_name convert <span class="keyword">to</span> <span class="keyword">character</span> <span class="keyword">set</span> charset_name;</span>
+<span class="operator"><span class="keyword">alter</span> <span class="keyword">table</span> tb_name modify latin1_text_col text <span class="keyword">character</span> <span class="keyword">set</span> utf8;</span>
+<span class="operator"><span class="keyword">alter</span> <span class="keyword">table</span> tb_name change old_col_name new_column <span class="keyword">varchar</span>(<span class="number">10</span>) <span class="keyword">character</span> <span class="keyword">set</span> utf8 <span class="keyword">collate</span> utf8_general_ci;</span>
+</pre></td></tr></table></figure>
+
+<blockquote><p>低调做人，高调做事</p>
+</blockquote>
+]]></content>
+    <category scheme="http://yoursite.com/tags/MySQL/" term="MySQL"/>
+  </entry>
+</feed>
