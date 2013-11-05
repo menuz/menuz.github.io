@@ -1,0 +1,260 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>webmagic网页解析包阅读 | Toss</title>
+  <meta name="author" content="menuz">
+
+  
+  <meta name="description" content="Toss as much as possible">
+  
+  
+
+  <link rel="alternate" href="/atom.xml" title="Toss" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'true']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+  <!-- baidu anaylitics -->
+  <script type="text/javascript">
+      var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+      document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fcc181c2a1b09ee3f0eeae369beb9c6b0' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+
+  <!-- google anaylistics -->
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-45438564-1', 'menuz.github.io');
+      ga('send', 'pageview');
+  </script>
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><nav>
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+</nav></header>
+  <div id="content" class="inner"><article class="post">
+  
+  <header>
+    
+  
+    <h1 class="title">webmagic网页解析包阅读</h1>
+  
+
+    <time datetime="2013-11-04T11:08:09.000Z">
+  <span class="day">4</span><span class="month">11月</span>
+</time>
+  </header>
+  <div class="entry-content">
+    
+      <p>I have been reading <a href="https://github.com/menuz/webmagic" target="_blank">webmagic</a>, a web crawler in github. I try to read the source code, and some design pattern can be extracted to share. </p>
+<p><strong><strong>1. Overview &amp; Prerequisites</strong></strong></p>
+<p>I have read the <strong>com.codecraft.webmagic.selector</strong> package, which aims to parse html, and extract urls in html. <a href="http://jsoup.org/" target="_blank">Jsoup</a> is an open source project on parsing html, and <a href="https://github.com/code4craft/xsoup" target="_blank">Xsoup</a> is a subproject based on Jsoup.</p>
+<p><strong>1.1 Jsoup intro</strong></p>
+<p>Jsoup has two ways of extracting html: <strong>DOM navigatoin</strong> and <strong>Selector syntax</strong>. The demo below is easy understanding, which may give you a common sense about what jsoup can do. Plus HtmlCleaner is also a html parser, but the performance and time efficiency is not as good as Jsoup.</p>
+<pre><code>import java<span class="preprocessor">.io</span><span class="preprocessor">.File</span><span class="comment">;</span>
+import java<span class="preprocessor">.io</span><span class="preprocessor">.IOException</span><span class="comment">;</span>
+import org<span class="preprocessor">.jsoup</span><span class="preprocessor">.Jsoup</span><span class="comment">;</span>
+import org<span class="preprocessor">.jsoup</span><span class="preprocessor">.nodes</span><span class="preprocessor">.Document</span><span class="comment">;</span>
+import org<span class="preprocessor">.jsoup</span><span class="preprocessor">.nodes</span><span class="preprocessor">.Element</span><span class="comment">;</span>
+import org<span class="preprocessor">.jsoup</span><span class="preprocessor">.select</span><span class="preprocessor">.Elements</span><span class="comment">;</span>
+public class JsoupTest {
+    public static void main(String[] args) {
+        m1()<span class="comment">;</span>
+        m2()<span class="comment">;</span>
+        m4()<span class="comment">;</span>
+    }
+    public static void m1() {
+        File input = new File(<span class="string">"/Users/menuz/Desktop/baidu.html"</span>)<span class="comment">;</span>
+        Document doc =  null<span class="comment">;</span>
+        try {
+            doc = Jsoup<span class="preprocessor">.parse</span>(input, <span class="string">"UTF-8"</span>, <span class="string">"http://www.baidu.com/"</span>)<span class="comment">;</span>
+        } catch (IOException e) {
+            e<span class="preprocessor">.printStackTrace</span>()<span class="comment">;</span>
+        }
+        Element content = doc<span class="preprocessor">.getElementById</span>(<span class="string">"body"</span>)<span class="comment">;</span>
+        Elements links = content<span class="preprocessor">.getElementsByTag</span>(<span class="string">"a"</span>)<span class="comment">;</span>
+        for (Element link : links) {
+          String linkHref = link<span class="preprocessor">.attr</span>(<span class="string">"href"</span>)<span class="comment">;</span>
+          String linkText = link<span class="preprocessor">.text</span>()<span class="comment">;</span>
+        }
+    }
+    public static void m2() {
+        File input = new File(<span class="string">"/Users/menuz/Desktop/baidu.html"</span>)<span class="comment">;</span>
+        Document doc =  null<span class="comment">;</span>
+        try {
+            doc = Jsoup<span class="preprocessor">.parse</span>(input, <span class="string">"UTF-8"</span>, <span class="string">"http://www.baidu.com/"</span>)<span class="comment">;</span>
+        } catch (IOException e) {
+            e<span class="preprocessor">.printStackTrace</span>()<span class="comment">;</span>
+        }
+        Elements links = doc<span class="preprocessor">.select</span>(<span class="string">"a[href]"</span>)<span class="comment">; // a with href</span>
+        for(Element link : links) {
+            String href =link<span class="preprocessor">.absUrl</span>(<span class="string">"href"</span>)<span class="comment">;</span>
+            System<span class="preprocessor">.out</span><span class="preprocessor">.println</span>(href)<span class="comment">;</span>
+        }
+        System<span class="preprocessor">.out</span><span class="preprocessor">.println</span>(<span class="string">"links size = "</span> + links<span class="preprocessor">.size</span>())<span class="comment">;</span>
+    }
+    public static void m3() {
+        String html = <span class="string">"&lt;p&gt;An &lt;a href='http://example.com/'&gt;&lt;b&gt;example&lt;/b&gt;&lt;/a&gt; link.&lt;/p&gt;"</span><span class="comment">;</span>
+        Document doc = Jsoup<span class="preprocessor">.parse</span>(html)<span class="comment">;</span>
+        Element link = doc<span class="preprocessor">.select</span>(<span class="string">"a"</span>)<span class="preprocessor">.first</span>()<span class="comment">;</span>
+        String text = doc<span class="preprocessor">.body</span>()<span class="preprocessor">.text</span>()<span class="comment">; // "An example link"</span>
+        String linkHref = link<span class="preprocessor">.attr</span>(<span class="string">"href"</span>)<span class="comment">; // "http://example.com/"</span>
+        String linkText = link<span class="preprocessor">.text</span>()<span class="comment">; // "example""</span>
+        String linkOuterH = link<span class="preprocessor">.outerHtml</span>()<span class="comment">; </span>
+            // <span class="string">"&lt;a href="</span>http://example<span class="preprocessor">.com</span><span class="string">"&gt;&lt;b&gt;example&lt;/b&gt;&lt;/a&gt;"</span>
+        String linkInnerH = link<span class="preprocessor">.html</span>()<span class="comment">; // "&lt;b&gt;example&lt;/b&gt;"</span>
+    }
+    public static void m4() {
+        Document doc = null<span class="comment">;</span>
+        try {
+            doc = Jsoup<span class="preprocessor">.connect</span>(<span class="string">"http://www.baidu.com"</span>)<span class="preprocessor">.get</span>()<span class="comment">;</span>
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e<span class="preprocessor">.printStackTrace</span>()<span class="comment">;</span>
+        }
+        Elements links = doc<span class="preprocessor">.select</span>(<span class="string">"a[href]"</span>)<span class="comment">; // a with href</span>
+        for(Element link : links) {
+            String href =link<span class="preprocessor">.absUrl</span>(<span class="string">"href"</span>)<span class="comment">;</span>
+            System<span class="preprocessor">.out</span><span class="preprocessor">.println</span>(href)<span class="comment">;</span>
+        }
+        System<span class="preprocessor">.out</span><span class="preprocessor">.println</span>(<span class="string">"links size = "</span> + links<span class="preprocessor">.size</span>())<span class="comment">;</span>
+        Element link = doc<span class="preprocessor">.select</span>(<span class="string">"a"</span>)<span class="preprocessor">.first</span>()<span class="comment">;</span>
+        String relHref = link<span class="preprocessor">.attr</span>(<span class="string">"href"</span>)<span class="comment">; // == "http://www.baidu.com/gaoji/preferences.html"</span>
+        String absHref = link<span class="preprocessor">.attr</span>(<span class="string">"abs:href"</span>)<span class="comment">; // "http://www.baidu.com/gaoji/preferences.html"</span>
+    }
+}</code></pre>
+<hr>
+<p><strong>2. SimpleFactory Pattern</strong></p>
+<p><strong>2.1 Selector &amp; ElementSelector </strong> are two interfaces. Classes implement Selector are the real classes to parse html. </p>
+<p><strong>2.2 Selectors</strong> actually is a Selector Factory creating different Selectors, such as RegexSelector, XpathSelector, CssSelector and XsoupSelector.<strong>RegexSelector</strong> will handle with urls extracted by Jsoup.<strong>XpathSelector</strong> will use HtmlCleaner to handle with whole html. <strong>CssSelector</strong> handles with an Element, such as a Element, extracted by Jsoup. <strong>XsoupSelector</strong> is same with CssSelector, what is more, XsoupSelector also use Xsoup, which extends from Jsoup. So Jsoup is the most important thing.</p>
+<p><strong>2.3 Selectable</strong> is the main class known public to developer, providing lots of methods. Regex pattern, regext(&quot;.a<em>href</em>.“), Css Pattern, $(”a[href]“), Xpath pattern, xpath(”//@href&quot;).<strong>Class PlainText</strong>, <strong>Html</strong> implements Selectable. <strong>Html</strong> has document properties for storing whole html info, <strong>Html</strong> use <strong>Selectors</strong> to create specific <strong>Selector</strong> to handle document inside html and generate what we want.</p>
+<img src="/img/selector.png" class="[class names]" title="[500] [500] [title text [alt text]]">
+
+
+
+<p><strong>3.Conclusion</strong></p>
+<p><strong>3.1 interface program oriented, try to use interface as much as possible.</strong></p>
+<p><strong>3.2 class has many properties to set, method return Class self make it work easier.</strong></p>
+<p><strong>3.3 try simplefactory.</strong></p>
+<blockquote><p>人生就是认识自我的过程</p>
+</blockquote>
+
+    
+    
+    <footer class="meta">
+      
+      
+  <div class="tags">
+<a href="/tags/Webmagic/">Webmagic</a></div>
+
+      
+    </footer>
+    
+  </div>
+  
+
+<!--<section id="comment">
+  <div id="disqus_thread" aria-live="polite">
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>-->
+
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+ var duoshuoQuery = {short_name:"menuz"};
+  (function() {
+   var ds = document.createElement('script');
+   ds.type = 'text/javascript';ds.async = true;
+   ds.src = 'http://static.duoshuo.com/embed.js';
+   ds.charset = 'UTF-8';
+   (document.getElementsByTagName('head')[0]
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+   })();
+</script>
+<!-- Duoshuo Comment END -->
+
+
+
+
+</article></div>
+  <footer id="footer" class="inner"><div class="social alignright">
+  
+  
+  
+  
+  <a class="rss" href="/atom.xml" title="RSS">RSS</a>
+</div>
+<p>
+  
+  &copy; 2013 menuz
+  
+</p>
+<div class="clearfix"></div></footer>
+  <script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'disqus';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+<div id="phasebeam">
+  <canvas></canvas>
+  <canvas></canvas>
+  <canvas></canvas>
+</div>
+<script src="/js/phasebeam.js"></script>
+</body>
+</html>
